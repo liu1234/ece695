@@ -2,10 +2,25 @@ CC=gcc
 CPP=g++
 CCFLAGS=-std=c99 -ggdb
 
-all: gen mul mgen 
+all: gen mul graph attackSim
+
+Heap.o: heap.c
+	$(CC) -c $(CCFLAGS) heap.c
 
 queue.o: queue.c
 	$(CC) -c $(CCFLAGS) queue.c
+
+bfs.o: bfs.c
+	$(CC) -c $(CCFLAGS) bfs.c
+	
+#bfs: bfs.o queue.o
+#	$(CC) -o bfs bfs.o queue.o -lm
+
+attackSim.o: attackSim.c
+	$(CC) -c $(CCFLAGS) attackSim.c
+
+attackSim: attackSim.o Heap.o bfs.o queue.o
+	$(CC) -o attackSim attackSim.o Heap.o bfs.o queue.o -lm
 
 uniform.o: uniform.c
 	$(CC) -c $(CCFLAGS) uniform.c
@@ -37,8 +52,8 @@ mul: mulvalInput.o
 matrix-topology.o: matrix-topology.c
 	${CC} -c ${CCFLAGS} matrix-topology.c
 	
-mgen: matrix-topology.o uniform.o power.o queue.o
-	${CC} -o mgen matrix-topology.o uniform.o power.o queue.o -lm
+graph: matrix-topology.o uniform.o power.o queue.o
+	${CC} -o graph matrix-topology.o uniform.o power.o queue.o -lm
 	
 clean:
-	rm -rf *.o gen mul test mgen
+	rm -rf *.o gen mul test graph attackSim 
